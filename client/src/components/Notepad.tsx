@@ -1,0 +1,263 @@
+import { useState, useRef, useEffect } from "react";
+import { format } from "date-fns";
+import { motion, AnimatePresence } from "framer-motion";
+import { Check, Plus, Timer, Trash2, GripVertical } from "lucide-react";
+import { useTodos, useCreateTodo, useUpdateTodo, useDeleteTodo, useAppState, useUpdateAppState, useResetAppState } from "@/hooks/use-todos";
+import { useSoundEffects } from "./AudioEffects";
+import { TrophyModal } from "./TrophyModal";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+
+export function Notepad() {
+  const { data: todos = [] } = useTodos();
+  const { data: appState } = useAppState();
+  
+  const createTodo = useCreateTodo();
+  const updateTodo = useUpdateTodo();
+  const deleteTodo = useDeleteTodo();
+  const updateAppState = useUpdateAppState();
+  const resetAppState = useResetAppState();
+
+  const [newTask, setNewTask] = useState("");
+  const [showTrophy, setShowTrophy] = useState(false);
+  const { playTick } = useSoundEffects();
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const isPlanning = appState?.status === "planning";
+  const isRunning = appState?.status === "running";
+  const isFinished = appState?.status === "finished";
+
+  // Check for completion
+  useEffect(() => {
+    if (isRunning && todos.length > 0) {
+      const allCompleted = todos.every(t => t.completed);
+      if (allCompleted) {
+        // Delay slightly for effect
+        const timer = setTimeout(() => {
+          updateAppState.mutate({ status: "finished" });
+          setShowTrophy(true);
+        }, 500);
+        return () => clearTimeout(timer);
+      }
+    }
+  }, [todos, isRunning, updateAppState]);
+
+  const handleStart = () => {
+    if (todos.length === 0) return;
+    updateAppState.mutate({ 
+      status: "running", 
+      startTime: new Date() 
+    });
+  };
+
+  const handleReset = () => {
+    setShowTrophy(false);
+    resetAppState.mutate();
+  };
+
+  const handleAddTask = (e?: React.FormEvent) => {
+    e?.preventDefault();
+    if (!newTask.trim()) return;
+    
+    // Auto-calculate order
+    const maxOrder = Math.max(0, ...todos.map(t => t.order));
+    
+    createTodo.mutate({ 
+      content: newTask,
+      completed: false,
+      order: maxOrder + 1
+    });
+    setNewTask("");
+    
+    // Keep focus
+    setTimeout(() => inputRef.current?.focus(), 10);
+  };
+
+  const handleCheck = (id: number, completed: boolean) => {
+    if (!isRunning) return; // Cannot check unless running
+    playTick();
+    updateTodo.mutate({ id, completed });
+  };
+
+  // Sort todos by order
+  const sortedTodos = [...todos].sort((a, b) => a.order - b.order);
+
+  return (
+    <div className="min-h-screen py-8 px-4 flex justify-center items-start overflow-x-hidden">
+      {/* The Notepad */}
+      <div className="relative w-full max-w-2xl bg-[#fefcf5] notepad-paper paper-shadow rounded-sm min-h-[800px] flex flex-col pb-20 transform transition-transform duration-500 hover:rotate-0 sm:-rotate-1">
+        
+        {/* Binding/Perforation Effect at Top */}
+        <div className="absolute top-0 left-0 right-0 h-12 bg-gradient-to-b from-black/5 to-transparent rounded-t-sm pointer-events-none" />
+        <div className="absolute -top-3 left-0 right-0 h-6 flex justify-evenly">
+            {[...Array(8)].map((_, i) => (
+                <div key={i} className="w-4 h-4 rounded-full bg-stone-800 shadow-inner ring-1 ring-white/20" />
+            ))}
+        </div>
+
+        {/* Header Section (Unlined) */}
+        <div className="pt-16 pb-4 px-8 sm:px-16 flex flex-col gap-2 relative z-10">
+          <div className="flex justify-between items-end border-b-2 border-slate-800/10 pb-2">
+            <div className="font-hand text-xl text-slate-500">
+               {format(new Date(), "MMMM do")}
+            </div>
+            {appState?.startTime && isRunning && (
+                <div className="flex items-center text-slate-400 text-sm font-sans animate-pulse">
+                    <Timer className="w-4 h-4 mr-1" />
+                    Timer Active
+                </div>
+            )}
+          </div>
+          
+          <input
+            className="w-full bg-transparent border-none text-4xl sm:text-5xl font-hand text-slate-800 placeholder:text-slate-300 focus:outline-none focus:ring-0 p-0 mt-2"
+            value={appState?.title || "My To-Do List"}
+            onChange={(e) => updateAppState.mutate({ title: e.target.value })}
+            placeholder="Title..."
+            disabled={!isPlanning}
+          />
+        </div>
+
+        {/* List Section */}
+        <div className="flex-1 px-4 sm:px-0 relative z-10">
+          <div className="flex flex-col w-full">
+            <AnimatePresence>
+              {sortedTodos.map((todo, index) => (
+                <motion.div 
+                  key={todo.id}
+                  layout
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  className="group relative flex items-center h-[40px] hover:bg-blue-50/30 transition-colors px-2 sm:px-0"
+                >
+                  {/* Index Number (Left of Margin) */}
+                  <div className="hidden sm:flex w-[60px] justify-end pr-3 text-slate-400 font-hand text-lg select-none">
+                    {index + 1}.
+                  </div>
+                  
+                  {/* Mobile Index */}
+                  <div className="sm:hidden w-8 text-slate-400 font-hand text-lg select-none">
+                    {index + 1}.
+                  </div>
+
+                  {/* Task Content */}
+                  <div className="flex-1 pl-4 sm:pl-6 pr-4 flex items-center">
+                    <span 
+                      className={`
+                        font-hand text-xl sm:text-2xl transition-all duration-300 w-full truncate
+                        ${todo.completed ? "text-slate-400 line-through decoration-slate-400/50 decoration-2" : "text-slate-800"}
+                      `}
+                    >
+                      {todo.content}
+                    </span>
+                  </div>
+
+                  {/* Checkbox (Far Right) */}
+                  <div className="w-[60px] flex justify-center">
+                    <button
+                      onClick={() => handleCheck(todo.id, !todo.completed)}
+                      disabled={!isRunning}
+                      className={`
+                        w-8 h-8 border-2 rounded-md transition-all duration-200 flex items-center justify-center
+                        ${!isRunning 
+                           ? "border-slate-300 opacity-50 cursor-not-allowed bg-slate-100" 
+                           : "border-slate-800 hover:border-blue-600 cursor-pointer bg-white hover:shadow-md active:scale-95"
+                        }
+                        ${todo.completed ? "border-green-600 bg-green-50" : ""}
+                      `}
+                    >
+                      {todo.completed && (
+                        <Check className="w-6 h-6 text-green-600 animate-check" strokeWidth={3} />
+                      )}
+                    </button>
+                  </div>
+
+                  {/* Delete Action (Only in Planning) */}
+                  {isPlanning && (
+                    <button 
+                        onClick={() => deleteTodo.mutate(todo.id)}
+                        className="absolute -right-8 opacity-0 group-hover:opacity-100 text-red-400 hover:text-red-600 transition-opacity p-2"
+                    >
+                        <Trash2 className="w-5 h-5" />
+                    </button>
+                  )}
+                </motion.div>
+              ))}
+            </AnimatePresence>
+
+            {/* Input Row */}
+            <div className="h-[40px] flex items-center group px-2 sm:px-0 mt-1">
+               <div className="hidden sm:flex w-[60px] justify-end pr-3 text-slate-300 font-hand text-lg select-none">
+                  {sortedTodos.length + 1}.
+               </div>
+               <div className="sm:hidden w-8 text-slate-300 font-hand text-lg select-none">
+                  {sortedTodos.length + 1}.
+               </div>
+               <form onSubmit={handleAddTask} className="flex-1 pl-4 sm:pl-6 pr-4">
+                 <input
+                   ref={inputRef}
+                   value={newTask}
+                   onChange={(e) => setNewTask(e.target.value)}
+                   placeholder={isPlanning ? "Write a task here..." : "Add forgotten task..."}
+                   className="w-full bg-transparent border-none text-xl sm:text-2xl font-hand text-slate-800 placeholder:text-slate-300 focus:outline-none focus:ring-0 p-0"
+                 />
+               </form>
+               <div className="w-[60px] flex justify-center">
+                 <Button 
+                   variant="ghost" 
+                   size="icon" 
+                   onClick={() => handleAddTask()}
+                   disabled={!newTask.trim()}
+                   className="opacity-20 hover:opacity-100 transition-opacity"
+                 >
+                   <Plus className="w-6 h-6" />
+                 </Button>
+               </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Footer Actions */}
+        <div className="absolute bottom-12 left-0 right-0 flex justify-center items-center px-8 z-20">
+            {isPlanning && todos.length > 0 && (
+                <Button 
+                    onClick={handleStart}
+                    className="
+                        bg-slate-900 text-white font-hand text-xl px-12 py-6 rounded-full shadow-xl 
+                        hover:bg-slate-800 hover:scale-105 transition-all duration-300
+                        hover:shadow-2xl hover:shadow-slate-900/20
+                    "
+                >
+                    Start My Day
+                </Button>
+            )}
+            
+            {isRunning && (
+                <div className="text-slate-400 font-hand italic">
+                    Focus mode active. Check items off as you go!
+                </div>
+            )}
+        </div>
+        
+        {/* Reset Button (Hidden usually, mostly for dev or stuck states) */}
+        {!isPlanning && !isFinished && (
+           <div className="absolute top-4 right-4">
+               <Button variant="ghost" size="sm" onClick={handleReset} className="text-slate-300 hover:text-red-400">
+                   Reset
+               </Button>
+           </div>
+        )}
+      </div>
+
+      <TrophyModal 
+        isOpen={showTrophy} 
+        onClose={() => setShowTrophy(false)} 
+        onReset={handleReset}
+        startTime={appState?.startTime || null}
+        endTime={new Date()}
+        taskCount={todos.length}
+      />
+    </div>
+  );
+}
