@@ -37,8 +37,8 @@ export function Notepad() {
   ];
 
   const backgroundColors = [
-    { name: "Dark Slate", color: "#1e293b" },
     { name: "Charcoal", color: "#171717" },
+    { name: "Dark Slate", color: "#1e293b" },
     { name: "Deep Navy", color: "#0f172a" },
     { name: "Dark Emerald", color: "#064e3b" },
     { name: "Walnut", color: "#2d241e" },
