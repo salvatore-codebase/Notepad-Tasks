@@ -36,8 +36,8 @@ export function Notepad() {
         startTime: new Date() 
       });
     } else if (isRunning) {
-      const allCompleted = todos.length > 0 && todos.every(t => t.completed);
-      if (allCompleted) {
+      const completedCount = todos.filter(t => t.completed).length;
+      if (completedCount > 0) {
         updateAppState.mutate({ status: "finished" });
         setShowTrophy(true);
       }
