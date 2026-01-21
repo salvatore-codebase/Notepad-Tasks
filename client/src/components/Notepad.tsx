@@ -28,6 +28,22 @@ export function Notepad() {
   const isRunning = appState?.status === "running";
   const isFinished = appState?.status === "finished";
 
+  const paperColors = [
+    { name: "Cream", color: "#fefcf5" },
+    { name: "Soft Blue", color: "#f0f7ff" },
+    { name: "Soft Green", color: "#f0fff4" },
+    { name: "Soft Pink", color: "#fff5f7" },
+    { name: "Soft Yellow", color: "#fffdf0" },
+  ];
+
+  const backgroundColors = [
+    { name: "Slate", color: "#f1f5f9" },
+    { name: "Sage", color: "#f2f2eb" },
+    { name: "Dusty Blue", color: "#ebf2f5" },
+    { name: "Mauve", color: "#f5ebf2" },
+    { name: "Parchment", color: "#f5f5dc" },
+  ];
+
   const handleStartOrComplete = () => {
     if (isPlanning) {
       if (todos.length === 0) return;
@@ -82,8 +98,47 @@ export function Notepad() {
   const sortedTodos = [...todos].sort((a, b) => a.order - b.order);
 
   return (
-    <div className="min-h-screen py-8 px-4 flex justify-center items-start overflow-x-hidden">
-      <div className="relative w-full max-w-2xl bg-[#fefcf5] notepad-paper paper-shadow rounded-sm min-h-[800px] flex flex-col pb-20 transform transition-transform duration-500 hover:rotate-0 sm:-rotate-1">
+    <div 
+      className="min-h-screen py-8 px-4 flex justify-center items-start overflow-x-hidden transition-colors duration-500"
+      style={{ backgroundColor: appState?.backgroundColor || "#f1f5f9" }}
+    >
+      {/* Settings Side Panel */}
+      <div className="fixed left-4 top-1/2 -translate-y-1/2 flex flex-col gap-6 bg-white/80 backdrop-blur-sm p-4 rounded-2xl shadow-lg border border-stone-200 z-50">
+        <div className="flex flex-col gap-3">
+          <span className="text-[10px] uppercase tracking-widest font-sans font-bold text-stone-400 text-center">Paper</span>
+          <div className="flex flex-col gap-2">
+            {paperColors.map((pc) => (
+              <button
+                key={pc.color}
+                onClick={() => updateAppState.mutate({ paperColor: pc.color })}
+                className={`w-8 h-8 rounded-full border-2 transition-transform hover:scale-110 active:scale-95 ${appState?.paperColor === pc.color ? 'border-slate-800 scale-110' : 'border-stone-200'}`}
+                style={{ backgroundColor: pc.color }}
+                title={pc.name}
+              />
+            ))}
+          </div>
+        </div>
+        <div className="w-full h-px bg-stone-200" />
+        <div className="flex flex-col gap-3">
+          <span className="text-[10px] uppercase tracking-widest font-sans font-bold text-stone-400 text-center">Desk</span>
+          <div className="flex flex-col gap-2">
+            {backgroundColors.map((bc) => (
+              <button
+                key={bc.color}
+                onClick={() => updateAppState.mutate({ backgroundColor: bc.color })}
+                className={`w-8 h-8 rounded-full border-2 transition-transform hover:scale-110 active:scale-95 ${appState?.backgroundColor === bc.color ? 'border-slate-800 scale-110' : 'border-stone-200'}`}
+                style={{ backgroundColor: bc.color }}
+                title={bc.name}
+              />
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <div 
+        className="relative w-full max-w-2xl notepad-paper paper-shadow rounded-sm min-h-[800px] flex flex-col pb-20 transform transition-all duration-500 hover:rotate-0 sm:-rotate-1"
+        style={{ backgroundColor: appState?.paperColor || "#fefcf5" }}
+      >
         <div className="absolute top-0 left-0 right-0 h-12 bg-gradient-to-b from-black/5 to-transparent rounded-t-sm pointer-events-none" />
         <div className="absolute -top-3 left-0 right-0 h-6 flex justify-evenly">
             {[...Array(8)].map((_, i) => (

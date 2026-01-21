@@ -15,6 +15,8 @@ export const appState = pgTable("app_state", {
   title: text("title").notNull().default("My To-Do List"),
   startTime: timestamp("start_time"),
   status: text("status", { enum: ["planning", "running", "finished"] }).notNull().default("planning"),
+  paperColor: text("paper_color").notNull().default("#fefcf5"),
+  backgroundColor: text("background_color").notNull().default("#f1f5f9"),
 });
 
 export const insertTodoSchema = createInsertSchema(todos).omit({ id: true });
