@@ -30,10 +30,10 @@ export function Notepad() {
 
   const paperColors = [
     { name: "Cream", color: "#fefcf5" },
-    { name: "Soft Blue", color: "#f0f7ff" },
-    { name: "Soft Green", color: "#f0fff4" },
-    { name: "Soft Pink", color: "#fff5f7" },
-    { name: "Soft Yellow", color: "#fffdf0" },
+    { name: "Soft Blue", color: "#e3f2fd" },
+    { name: "Soft Green", color: "#e8f5e9" },
+    { name: "Soft Pink", color: "#fce4ec" },
+    { name: "Soft Yellow", color: "#fff9c4" },
   ];
 
   const backgroundColors = [
