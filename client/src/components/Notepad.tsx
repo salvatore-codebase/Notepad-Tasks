@@ -232,21 +232,30 @@ export function Notepad() {
         </div>
 
         <div className="absolute bottom-12 left-0 right-0 flex justify-center items-center px-8 z-20">
-            {!isFinished && (
+            {isPlanning ? (
+                todos.length > 0 && (
+                    <Button 
+                        onClick={handleStartOrComplete}
+                        className="
+                            bg-slate-900 text-white font-hand text-xl px-12 py-6 rounded-full shadow-xl 
+                            hover:bg-slate-800 hover:scale-105 transition-all duration-300
+                            hover:shadow-2xl hover:shadow-slate-900/20
+                        "
+                    >
+                        Start My Day
+                    </Button>
+                )
+            ) : isRunning ? (
                 <Button 
                     onClick={handleStartOrComplete}
-                    disabled={isPlanning && todos.length === 0}
-                    className={`
-                      font-hand text-xl px-12 py-6 rounded-full transition-all duration-300
-                      ${isPlanning 
-                        ? "bg-slate-900 text-white shadow-xl hover:bg-slate-800 hover:scale-105 hover:shadow-2xl hover:shadow-slate-900/20" 
-                        : "bg-transparent border-none text-green-800 hover:bg-green-50/50"
-                      }
-                    `}
+                    className="
+                      bg-transparent border-none text-green-800 font-hand text-xl px-12 py-6 rounded-full 
+                      hover:bg-green-50/50 transition-all duration-300
+                    "
                 >
-                    {isPlanning ? "Start My Day" : "Complete"}
+                    Complete
                 </Button>
-            )}
+            ) : null}
         </div>
         
         {!isPlanning && !isFinished && (
