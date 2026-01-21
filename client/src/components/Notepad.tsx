@@ -39,9 +39,9 @@ export function Notepad() {
   const backgroundColors = [
     { name: "Charcoal", color: "#171717" },
     { name: "Dark Slate", color: "#1e293b" },
-    { name: "Light Blue", color: "#60a5fa" },
+    { name: "Navy Blue", color: "#1e3a8a" },
     { name: "Dark Emerald", color: "#064e3b" },
-    { name: "Wood", color: "#8b4513" },
+    { name: "Dark Wood", color: "#5d2e0a" },
   ];
 
   const handleStartOrComplete = () => {
