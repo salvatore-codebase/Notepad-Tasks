@@ -61,7 +61,9 @@ export const api = {
     update: {
       method: 'PATCH' as const,
       path: '/api/app-state',
-      input: insertAppStateSchema.partial(),
+      input: insertAppStateSchema.partial().extend({
+        startTime: z.coerce.date().optional().nullable(),
+      }),
       responses: {
         200: z.custom<typeof appState.$inferSelect>(),
       },

@@ -70,6 +70,7 @@ export async function registerRoutes(
       const state = await storage.updateAppState(input);
       res.json(state);
     } catch (err) {
+      console.error("App state update error:", err);
       res.status(400).json({ message: "Invalid input" });
     }
   });
