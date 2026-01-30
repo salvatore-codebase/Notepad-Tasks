@@ -152,9 +152,9 @@ export function Notepad() {
             ))}
         </div>
 
-        <div className="pt-12 pb-4 px-8 sm:px-16 flex flex-col gap-1 relative z-10">
-          <div className="flex justify-between items-end pb-1">
-            <div className="font-hand text-xl text-slate-500 mb-0">
+        <div className="pt-16 pb-4 px-8 sm:px-16 flex flex-col gap-2 relative z-10">
+          <div className="flex justify-between items-end border-b-2 border-slate-800/10 pb-2">
+            <div className="font-hand text-xl text-slate-500">
                {format(new Date(), "MMMM do")}
             </div>
             {appState?.startTime && isRunning && (
@@ -166,7 +166,7 @@ export function Notepad() {
           </div>
           
           <input
-            className="w-full bg-transparent border-none text-4xl sm:text-5xl font-hand text-slate-800 placeholder:text-slate-300 focus:outline-none focus:ring-0 p-0 mt-[1.4rem] leading-tight"
+            className="w-full bg-transparent border-none text-4xl sm:text-5xl font-hand text-slate-800 placeholder:text-slate-300 focus:outline-none focus:ring-0 p-0 mt-2"
             value={appState?.title || "My To-Do List"}
             onChange={(e) => updateAppState.mutate({ title: e.target.value })}
             placeholder="Title..."
@@ -175,7 +175,7 @@ export function Notepad() {
         </div>
 
         <div className="flex-1 px-4 sm:px-0 relative z-10">
-          <div className="flex flex-col w-full pt-2">
+          <div className="flex flex-col w-full">
             <AnimatePresence>
               {sortedTodos.map((todo, index) => (
                 <motion.div 
@@ -261,7 +261,7 @@ export function Notepad() {
               ))}
             </AnimatePresence>
 
-            <div className="h-[40px] flex items-center group px-2 sm:px-0 mt-4">
+            <div className="h-[40px] flex items-center group px-2 sm:px-0 mt-1">
                <div className="hidden sm:flex w-[60px] justify-end pr-3 text-slate-300 font-hand text-lg select-none">
                   {sortedTodos.length + 1}.
                </div>
