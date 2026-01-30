@@ -152,7 +152,7 @@ export function Notepad() {
             ))}
         </div>
 
-        <div className="pt-12 pb-4 px-8 sm:px-16 flex flex-col gap-1 relative z-10">
+        <div className="pt-12 pb-4 px-8 sm:px-16 flex flex-col gap-1 relative z-10 h-[120px]">
           <div className="flex justify-between items-end pb-1">
             <div className="font-hand text-xl text-slate-500 mb-0">
                {format(new Date(), "MMMM do")}
@@ -174,8 +174,8 @@ export function Notepad() {
           />
         </div>
 
-        <div className="flex-1 px-4 sm:px-0 relative z-10">
-          <div className="flex flex-col w-full">
+        <div className="flex-1 px-4 sm:px-0 relative z-10 mt-0">
+          <div className="flex flex-col w-full pt-1">
             <AnimatePresence>
               {sortedTodos.map((todo, index) => (
                 <motion.div 
@@ -261,7 +261,7 @@ export function Notepad() {
               ))}
             </AnimatePresence>
 
-            <div className="h-[40px] flex items-center group px-2 sm:px-0 mt-6">
+            <div className="h-[40px] flex items-center group px-2 sm:px-0 mt-0">
                <div className="hidden sm:flex w-[60px] justify-end pr-3 text-slate-300 font-hand text-lg select-none">
                   {sortedTodos.length + 1}.
                </div>
