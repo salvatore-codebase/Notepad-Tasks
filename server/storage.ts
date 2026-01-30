@@ -86,12 +86,7 @@ export class DatabaseStorage implements IStorage {
       .where(eq(appState.id, current.id))
       .returning();
       
-    // Optionally clear completed todos or all todos? 
-    // "Reset" usually implies starting fresh. Let's delete all todos for a clean slate, 
-    // or maybe just uncheck them. Given "Reset" logic, users might want to clear.
-    // However, the user didn't specify "Clear", they asked for a "Start Button".
-    // I'll assume "Reset" (which I added) clears everything for a new "day".
-    // But to be safe, maybe just uncheck them? No, let's delete them to be a true "Reset".
+    // Clear ALL todos for a fresh start
     await db.delete(todos);
 
     return resetState;

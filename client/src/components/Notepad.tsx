@@ -63,6 +63,12 @@ export function Notepad() {
   const handleReset = () => {
     setShowTrophy(false);
     resetAppState.mutate();
+    // Force a small delay to ensure state is cleared before interaction
+    setTimeout(() => {
+      setNewTask("");
+      setEditingId(null);
+      setEditContent("");
+    }, 100);
   };
 
   const handleAddTask = (e?: React.FormEvent) => {
