@@ -86,8 +86,8 @@ export class DatabaseStorage implements IStorage {
       .where(eq(appState.id, current.id))
       .returning();
       
-    // Clear ALL todos for a fresh start
-    await db.delete(todos);
+    // Clear only COMPLETED todos, keep others for the next session
+    await db.delete(todos).where(eq(todos.completed, true));
 
     return resetState;
   }
