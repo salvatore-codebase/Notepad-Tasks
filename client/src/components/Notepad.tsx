@@ -153,8 +153,8 @@ export function Notepad() {
         </div>
 
         <div className="pt-16 pb-4 px-8 sm:px-16 flex flex-col gap-2 relative z-10">
-          <div className="flex justify-between items-end border-b-2 border-slate-800/10 pb-2">
-            <div className="font-hand text-xl text-slate-500">
+          <div className="flex justify-between items-end pb-2">
+            <div className="font-hand text-xl text-slate-500 mb-1">
                {format(new Date(), "MMMM do")}
             </div>
             {appState?.startTime && isRunning && (
