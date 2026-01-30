@@ -45,7 +45,7 @@ export function Notepad() {
   ];
 
   const handleStartOrComplete = () => {
-    if (isPlanning) {
+    if (isPlanning || isFinished) {
       if (todos.length === 0) return;
       updateAppState.mutate({ 
         status: "running", 
@@ -293,7 +293,7 @@ export function Notepad() {
         </div>
 
         <div className="absolute bottom-12 left-0 right-0 flex justify-center items-center px-8 z-20">
-            {isPlanning ? (
+            {(isPlanning || isFinished) ? (
                 todos.length > 0 && (
                     <Button 
                         onClick={handleStartOrComplete}
