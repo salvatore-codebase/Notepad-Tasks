@@ -334,7 +334,7 @@ export function Notepad() {
         onReset={handleReset}
         startTime={appState?.startTime || null}
         endTime={new Date()}
-        taskCount={todos.length}
+        taskCount={todos.filter(t => t.completed).length}
       />
     </div>
   );
