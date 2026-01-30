@@ -19,13 +19,29 @@ export const appState = pgTable("app_state", {
   backgroundColor: text("background_color").notNull().default("#f1f5f9"),
 });
 
+// Trophy collection - tracks count of each trophy tier earned
+export const trophyCounts = pgTable("trophy_counts", {
+  id: serial("id").primaryKey(),
+  tier1: integer("tier1").notNull().default(0),
+  tier2: integer("tier2").notNull().default(0),
+  tier3: integer("tier3").notNull().default(0),
+  tier4: integer("tier4").notNull().default(0),
+  tier5: integer("tier5").notNull().default(0),
+  tier6: integer("tier6").notNull().default(0),
+  tier7: integer("tier7").notNull().default(0),
+  tier8: integer("tier8").notNull().default(0),
+});
+
 export const insertTodoSchema = createInsertSchema(todos).omit({ id: true });
 export const insertAppStateSchema = createInsertSchema(appState).omit({ id: true });
+export const insertTrophyCountsSchema = createInsertSchema(trophyCounts).omit({ id: true });
 
 export type Todo = typeof todos.$inferSelect;
 export type InsertTodo = z.infer<typeof insertTodoSchema>;
 export type AppState = typeof appState.$inferSelect;
 export type InsertAppState = z.infer<typeof insertAppStateSchema>;
+export type TrophyCounts = typeof trophyCounts.$inferSelect;
+export type InsertTrophyCounts = z.infer<typeof insertTrophyCountsSchema>;
 
 // API Types
 export type UpdateTodoRequest = Partial<InsertTodo>;

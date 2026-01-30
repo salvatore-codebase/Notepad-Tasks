@@ -1,6 +1,6 @@
 import { db } from "./db";
-import { todos, appState, type Todo, type InsertTodo, type AppState, type InsertAppState } from "@shared/schema";
-import { eq, asc } from "drizzle-orm";
+import { todos, appState, trophyCounts, type Todo, type InsertTodo, type AppState, type InsertAppState, type TrophyCounts } from "@shared/schema";
+import { eq, asc, sql } from "drizzle-orm";
 
 export interface IStorage {
   // Todos
@@ -14,6 +14,10 @@ export interface IStorage {
   getAppState(): Promise<AppState>;
   updateAppState(updates: Partial<InsertAppState>): Promise<AppState>;
   resetAppState(): Promise<AppState>;
+  
+  // Trophy Counts
+  getTrophyCounts(): Promise<TrophyCounts>;
+  incrementTrophy(tier: number): Promise<TrophyCounts>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -90,6 +94,32 @@ export class DatabaseStorage implements IStorage {
     await db.delete(todos).where(eq(todos.completed, true));
 
     return resetState;
+  }
+
+  async getTrophyCounts(): Promise<TrophyCounts> {
+    const [counts] = await db.select().from(trophyCounts).limit(1);
+    if (counts) return counts;
+
+    // Initialize if not exists
+    const [newCounts] = await db.insert(trophyCounts).values({}).returning();
+    return newCounts;
+  }
+
+  async incrementTrophy(tier: number): Promise<TrophyCounts> {
+    await this.getTrophyCounts();
+    const current = await this.getTrophyCounts();
+    
+    const tierColumn = `tier${tier}` as keyof TrophyCounts;
+    const currentValue = (current[tierColumn] as number) || 0;
+    
+    const updateObj: Record<string, number> = {};
+    updateObj[tierColumn] = currentValue + 1;
+    
+    const [updated] = await db.update(trophyCounts)
+      .set(updateObj)
+      .where(eq(trophyCounts.id, current.id))
+      .returning();
+    return updated;
   }
 }
 
