@@ -152,9 +152,9 @@ export function Notepad() {
             ))}
         </div>
 
-        <div className="pt-16 pb-4 px-8 sm:px-16 flex flex-col gap-2 relative z-10">
-          <div className="flex justify-between items-end pb-2">
-            <div className="font-hand text-xl text-slate-500 mb-1">
+        <div className="pt-12 pb-4 px-8 sm:px-16 flex flex-col gap-1 relative z-10">
+          <div className="flex justify-between items-end pb-1">
+            <div className="font-hand text-xl text-slate-500 mb-0">
                {format(new Date(), "MMMM do")}
             </div>
             {appState?.startTime && isRunning && (
@@ -166,7 +166,7 @@ export function Notepad() {
           </div>
           
           <input
-            className="w-full bg-transparent border-none text-4xl sm:text-5xl font-hand text-slate-800 placeholder:text-slate-300 focus:outline-none focus:ring-0 p-0 mt-2"
+            className="w-full bg-transparent border-none text-4xl sm:text-5xl font-hand text-slate-800 placeholder:text-slate-300 focus:outline-none focus:ring-0 p-0 mt-0 leading-tight"
             value={appState?.title || "My To-Do List"}
             onChange={(e) => updateAppState.mutate({ title: e.target.value })}
             placeholder="Title..."
