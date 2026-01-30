@@ -261,7 +261,7 @@ export function Notepad() {
               ))}
             </AnimatePresence>
 
-            <div className="h-[40px] flex items-center group px-2 sm:px-0 mt-1">
+            <div className="h-[40px] flex items-center group px-2 sm:px-0 mt-2">
                <div className="hidden sm:flex w-[60px] justify-end pr-3 text-slate-300 font-hand text-lg select-none">
                   {sortedTodos.length + 1}.
                </div>
