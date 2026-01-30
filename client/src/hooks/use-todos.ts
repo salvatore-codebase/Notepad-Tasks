@@ -126,3 +126,36 @@ export function useResetAppState() {
     },
   });
 }
+
+// ==========================================
+// TROPHY HOOKS
+// ==========================================
+
+export function useTrophyCounts() {
+  return useQuery({
+    queryKey: [api.trophies.get.path],
+    queryFn: async () => {
+      const res = await fetch(api.trophies.get.path);
+      if (!res.ok) throw new Error("Failed to fetch trophy counts");
+      return api.trophies.get.responses[200].parse(await res.json());
+    },
+  });
+}
+
+export function useIncrementTrophy() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (tier: number) => {
+      const res = await fetch(api.trophies.increment.path, {
+        method: api.trophies.increment.method,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ tier }),
+      });
+      if (!res.ok) throw new Error("Failed to increment trophy");
+      return api.trophies.increment.responses[200].parse(await res.json());
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [api.trophies.get.path] });
+    },
+  });
+}

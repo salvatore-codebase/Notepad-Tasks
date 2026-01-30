@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { insertTodoSchema, insertAppStateSchema, todos, appState } from './schema';
+import { insertTodoSchema, insertAppStateSchema, todos, appState, trophyCounts } from './schema';
 
 export const errorSchemas = {
   notFound: z.object({ message: z.string() }),
@@ -68,12 +68,28 @@ export const api = {
         200: z.custom<typeof appState.$inferSelect>(),
       },
     },
-    reset: { // Resets to planning mode, clears tasks or unchecks them? User implied "When all tasks are written... start button". 
-             // We'll interpret reset as "New List" or "Reset State". Let's provide a reset that clears start time and sets status to planning.
+    reset: {
       method: 'POST' as const,
       path: '/api/app-state/reset',
       responses: {
         200: z.custom<typeof appState.$inferSelect>(),
+      },
+    }
+  },
+  trophies: {
+    get: {
+      method: 'GET' as const,
+      path: '/api/trophies',
+      responses: {
+        200: z.custom<typeof trophyCounts.$inferSelect>(),
+      },
+    },
+    increment: {
+      method: 'POST' as const,
+      path: '/api/trophies/increment',
+      input: z.object({ tier: z.number().min(1).max(8) }),
+      responses: {
+        200: z.custom<typeof trophyCounts.$inferSelect>(),
       },
     }
   }

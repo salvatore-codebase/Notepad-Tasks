@@ -80,5 +80,25 @@ export async function registerRoutes(
     res.json(state);
   });
 
+  // -- Trophies --
+  app.get(api.trophies.get.path, async (req, res) => {
+    const counts = await storage.getTrophyCounts();
+    res.json(counts);
+  });
+
+  app.post(api.trophies.increment.path, async (req, res) => {
+    try {
+      const input = api.trophies.increment.input.parse(req.body);
+      const counts = await storage.incrementTrophy(input.tier);
+      res.json(counts);
+    } catch (err) {
+      if (err instanceof z.ZodError) {
+        res.status(400).json({ message: err.errors[0].message });
+      } else {
+        res.status(500).json({ message: "Internal Server Error" });
+      }
+    }
+  });
+
   return httpServer;
 }
