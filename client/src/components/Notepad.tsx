@@ -39,7 +39,7 @@ export function Notepad() {
   const backgroundColors = [
     { name: "Charcoal", color: "#171717" },
     { name: "Dark Slate", color: "#1e293b" },
-    { name: "Midnight Blue", color: "#191970" },
+    { name: "Navy Blue", color: "#172554" },
     { name: "Hunter Green", color: "#355E3B" },
     { name: "Coffee Brown", color: "#4B3621" },
   ];
@@ -153,7 +153,7 @@ export function Notepad() {
         </div>
 
         <div className="pt-12 pb-4 px-8 sm:px-16 flex flex-col gap-2 relative z-10">
-          <div className="flex justify-between items-end">
+          <div className="flex justify-between items-end border-b-2 border-slate-800/10 pb-2">
             <div className="font-hand text-xl text-slate-500">
                {format(new Date(), "MMMM do")}
             </div>
