@@ -39,7 +39,7 @@ export function Notepad() {
   const backgroundColors = [
     { name: "Charcoal", color: "#171717" },
     { name: "Dark Slate", color: "#1e293b" },
-    { name: "Navy Blue", color: "#172554" },
+    { name: "Night Blue", color: "#0C1445" },
     { name: "Hunter Green", color: "#355E3B" },
     { name: "Coffee Brown", color: "#4B3621" },
   ];
