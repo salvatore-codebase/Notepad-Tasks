@@ -335,6 +335,7 @@ export function Notepad() {
         startTime={appState?.startTime || null}
         endTime={new Date()}
         taskCount={todos.filter(t => t.completed).length}
+        totalTaskCount={todos.length}
       />
     </div>
   );

@@ -14,6 +14,7 @@ interface TrophyModalProps {
   startTime: string | Date | null;
   endTime: Date;
   taskCount: number;
+  totalTaskCount: number;
 }
 
 const TROPHY_CONFIG = [
@@ -55,7 +56,7 @@ function calculateTrophyTier(startTime: Date, endTime: Date): number {
   return tier;
 }
 
-export function TrophyModal({ isOpen, onClose, onReset, startTime, endTime, taskCount }: TrophyModalProps) {
+export function TrophyModal({ isOpen, onClose, onReset, startTime, endTime, taskCount, totalTaskCount }: TrophyModalProps) {
   const { playSuccess } = useSoundEffects();
   const [tier, setTier] = useState<number>(1);
   const [showCollection, setShowCollection] = useState(false);
@@ -76,7 +77,14 @@ export function TrophyModal({ isOpen, onClose, onReset, startTime, endTime, task
       });
 
       if (startTime) {
-        const calculatedTier = calculateTrophyTier(new Date(startTime), endTime);
+        let calculatedTier = calculateTrophyTier(new Date(startTime), endTime);
+        
+        // If not all tasks are completed, cap at Silver (tier 3) minimum
+        const allTasksCompleted = taskCount === totalTaskCount && totalTaskCount > 0;
+        if (!allTasksCompleted && calculatedTier < 3) {
+          calculatedTier = 3;
+        }
+        
         setTier(calculatedTier);
         
         // Save the trophy to the collection
@@ -84,7 +92,7 @@ export function TrophyModal({ isOpen, onClose, onReset, startTime, endTime, task
         setHasSavedTrophy(true);
       }
     }
-  }, [isOpen, startTime, endTime, playSuccess, hasSavedTrophy, incrementTrophy]);
+  }, [isOpen, startTime, endTime, playSuccess, hasSavedTrophy, incrementTrophy, taskCount, totalTaskCount]);
 
   useEffect(() => {
     if (!isOpen) {
