@@ -40,8 +40,8 @@ export function Notepad() {
     { name: "Charcoal", color: "#171717" },
     { name: "Dark Slate", color: "#1e293b" },
     { name: "Navy Blue", color: "#172554" },
-    { name: "Dark Emerald", color: "#064e3b" },
-    { name: "Dark Wood", color: "#451a03" },
+    { name: "Hunter Green", color: "#355E3B" },
+    { name: "Coffee Brown", color: "#4B3621" },
   ];
 
   const handleStartOrComplete = () => {
