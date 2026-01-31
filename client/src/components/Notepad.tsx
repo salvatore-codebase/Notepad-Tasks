@@ -166,7 +166,7 @@ export function Notepad() {
           </div>
           
           <input
-            className="w-full bg-transparent border-none text-4xl sm:text-5xl font-hand text-slate-800 placeholder:text-slate-300 focus:outline-none focus:ring-0 p-0 mt-3"
+            className="w-full bg-transparent border-none text-4xl sm:text-5xl font-hand text-slate-800 placeholder:text-slate-300 focus:outline-none focus:ring-0 p-0 mt-4"
             value={appState?.title || "My To-Do List"}
             onChange={(e) => updateAppState.mutate({ title: e.target.value })}
             placeholder="Title..."
@@ -174,7 +174,7 @@ export function Notepad() {
           />
         </div>
 
-        <div className="flex-1 px-4 sm:px-0 relative z-10 mt-3">
+        <div className="flex-1 px-4 sm:px-0 relative z-10 mt-2">
           <div className="flex flex-col w-full">
             <AnimatePresence>
               {sortedTodos.map((todo, index) => (
