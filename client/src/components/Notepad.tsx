@@ -319,13 +319,6 @@ export function Notepad() {
             ) : null}
         </div>
         
-        {!isPlanning && !isFinished && (
-           <div className="absolute top-4 right-4">
-               <Button variant="ghost" size="sm" onClick={handleReset} className="text-slate-300 hover:text-red-400">
-                   Reset
-               </Button>
-           </div>
-        )}
       </div>
 
       <TrophyModal 
