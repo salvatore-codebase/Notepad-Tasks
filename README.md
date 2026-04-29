@@ -26,7 +26,7 @@ Main Functionalities:
 ## Installation & Usage
 This app is not in its final state, and is used for learning and showcase purposes. To see the preview and use the app (on Replit), please refer to the Link in the "About me" section of the repository on Github, or the link below as well.
 
-https://replit.com/@salvatore-dev/Notepad-Tasks
+https://127bed4b-ed6f-44ca-b0bd-8de038a54e18-00-dgs694x5fwyj.picard.replit.dev/
 
 ## Notes
 A learning project practicing React + TypeScript frontend (Vite, Tailwind CSS) with a Node.js backend.
